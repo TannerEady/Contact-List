@@ -5,7 +5,6 @@ class ContactList
 
 #@user_input = ARGV
 
-
 # TODO: Implement command line interaction
 # This should be the only file where you use puts and gets
 if ARGV[0]
