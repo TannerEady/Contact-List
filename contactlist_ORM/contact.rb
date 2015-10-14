@@ -72,7 +72,6 @@ class Contact
 
 end
 
-    # Contact.new('Aaron', 'Eady', 'aaron@mail.com').save
     # Contact.find(3)
     # Contact.see_all
     # Contact.find_by_email('sue@mail.com')
