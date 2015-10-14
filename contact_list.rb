@@ -13,7 +13,7 @@ else
   print "Please enter a command: "
   command = gets.chomp.downcase
 end
- case command 
+ case command
  when 'help' then 
   puts "Here is a list of available commands:"
   puts "new - Create a new contact."
@@ -21,10 +21,10 @@ end
   puts "show - Show a contact."
   puts "find - Find a contact."
   when 'new' then
-    if Contact.find(ARGV[2])
+    if Contact.find(ARGV[1])
      print "Contact already exists. Please try a different email address.\n"
     else
-    Contact.create(ARGV[1], ARGV[2])
+    Contact.new(ARGV[1], ARGV[2], ARGV[3])
     puts "Your contact has been added!"
   end
   when 'list' then Contact.list
