@@ -1,117 +1,79 @@
-#require 'csv'
 require 'pg'
 
-class Contact 
+class Contact
 
-  # attr_accessor :name, :email
+  attr_reader :id, :name, :email
 
-  # def initialize(name, email)
-  #   # TODO: assign local variables to instance variables
-  #   @name = name
-  #   @email = email
-  # end
-  # def to_s
-  #   # TODO: return string representation of Contact
-  # end
+  def initialize(firstname, lastname, email)
+    @firstname = firstname
+    @lastname = lastname
+    @email = email
+  end
 
   def save
-
-    if @id
-      columns = instance_variables_hash.keys.join(", ")
-      values = instance_variables_hash.values.map { |v| "'#{v}" }.join(", ")
+    contact = self.class.connection.exec_params(
+      "INSERT INTO contacts(firstname, lastname, email)
+      VALUES($1, $2, $3) returning id;", [@firstname, @lastname, @email])
+      @id = contact[0]["id"]
   end
 
-  def destroy(id)
 
-    DELETE FROM contacts WHERE id = id
-
+  def destroy
+    self.class.connection.exec_params("DELETE FROM contacts 
+      WHERE id = $1;", [@id])
   end
- 
-  ## Class Methods
+
   class << self
 
     def connection
-      conn = PG.connect(
-        host: 'localhost',
-        dbname: 'contactlist',
-        user: 'development',
-        password: 'development'
-      )
+        @@conn = PG.connect(
+          host: 'localhost',
+          dbname: 'contactlist',
+          user: 'development',
+          password: 'development'
+        )
     end
- 
-    def new(firstname, lastname, email)
 
-      INSERT INTO contacts (firstname, lastname, email)
-      VALUES (firstname, lastname, email)
-      # TODO: Will initialize a contact as well as add it to the list of contacts
-      # contacts = []
-      # contacts[0] = contacts.object_id
-      # contacts[1] = name
-      # contacts[2] = email
-
-      # CSV.open("contacts.csv", "a") do |csv|
-      #   csv << contacts
-      # end
+    def see_all
+      connection.exec('SELECT * FROM contacts;').each do |contact|
+        puts contact
+      end
     end
- 
+
     def find(id)
-
-      SELECT c.id, c.firstname, c.lastname, c.email
-      FROM contacts AS c
-      WHERE c.id = id
-
+      connection.exec_params('SELECT * FROM contacts WHERE
+        id = $1;', [id]).each do |contact|
+        puts contact
+      end
     end
 
-      # TODO: Will find and return contacts that contain the term in the first name, last name or email
-      # index = false
-      # File.open("contacts.csv", "r") do |file|
-      #   file.readlines.each do |line|
-      #     index = true if line.match(term.to_s)
-      #     puts line if index == true
-      #   end
-      # end
-      # index
+    def find_all_by_lastname(name)
+      connection.exec_params('SELECT * FROM contacts WHERE
+        lastname = $1;', [name]).each do |contact|
+        puts contact
+      end
     end
 
-    def find_all_by_lastname(lastname)
-
-      CONN.exec_params("SELECT * FROM #{contacts} WHERE lastname=#{lastname}")
-
-    end
-
-    def find_all_by_firstname(firstname)
-
-      CONN.exec_params("SELECT * FROM #{contacts} WHERE firstname=#{firstname}")
-
+    def find_all_by_firstname(name)
+      connection.exec_params('SELECT * FROM contacts WHERE
+        firstname = $1;', [name]).each do |contact|
+        puts contact
+      end
     end
 
     def find_by_email(email)
-
-      CONN.exec_params("SELECT * FROM #{contacts} WHERE email=#{email}")
-
+      connection.exec_params('SELECT * FROM contacts WHERE
+        email = $1;', [email]).each do |contact|
+        puts contact
+      end
     end
- 
-    # def list
-    #   # TODO: Return the list of contacts, as is
-    #  CSV.foreach('contacts.csv') do |row|
-    #   puts row.inspect
-    #   end
-    # end
-    
-    # def show(id)
-    #   # TODO: Show a contact, based on ID
-    #   index = false
-    #   File.open("contacts.csv", "r") do |file|
-    #     file.readlines.each do |line|
-    #       index = true if line.match(id.to_s)
-    #       puts line if index == true
-    #       index = false
-    #   end
-    # end
+
   end
-    
-  end
- 
+
 end
 
-
+    # Contact.find(3)
+    # Contact.see_all
+    # Contact.find_by_email('sue@mail.com')
+    # Contact.find_all_by_firstname('Aaron')
+    # Contact.find_all_by_lastname('Prier')
