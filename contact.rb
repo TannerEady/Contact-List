@@ -68,7 +68,8 @@ class Contact
       end
     end
 
-  end
+  end 
+  
 
 end
 
