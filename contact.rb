@@ -69,7 +69,6 @@ class Contact
     end
 
   end 
-  
 
 end
 
