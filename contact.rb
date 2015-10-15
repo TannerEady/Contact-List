@@ -34,7 +34,7 @@ class Contact
     end
 
     def see_all
-      connection.exec('SELECT * FROM contacts;').each do |contact|
+      connection.exec_params('SELECT * FROM contacts;').each do |contact|
         puts contact
       end
     end
