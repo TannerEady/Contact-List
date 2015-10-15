@@ -2,7 +2,7 @@ require 'pg'
 
 class Contact
 
-  attr_reader :firstname, :lastname, :email
+  attr_reader :id, :firstname, :lastname, :email
 
   def initialize(firstname, lastname, email)
     @firstname = firstname
