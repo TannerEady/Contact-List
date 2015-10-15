@@ -2,7 +2,7 @@ require 'pg'
 
 class Contact
 
-  attr_reader :id, :name, :email
+  attr_reader :id, :firstname, :lastname, :email
 
   def initialize(firstname, lastname, email)
     @firstname = firstname
@@ -14,9 +14,8 @@ class Contact
     contact = self.class.connection.exec_params(
       "INSERT INTO contacts(firstname, lastname, email)
       VALUES($1, $2, $3) returning id;", [@firstname, @lastname, @email])
-      @id = contact[0]["id"]
+      @id = contact[0][@id]
   end
-
 
   def destroy
     self.class.connection.exec_params("DELETE FROM contacts 
@@ -71,9 +70,10 @@ class Contact
   end 
 
 end
-
-    # Contact.find(3)
-    # Contact.see_all
-    # Contact.find_by_email('sue@mail.com')
-    # Contact.find_all_by_firstname('Aaron')
-    # Contact.find_all_by_lastname('Prier')
+    
+# Contact.new('Jordy', 'Atwood', 'jordy@mail.com').save
+# Contact.find(3) 
+# Contact.find_by_email('sue@mail.com')
+# Contact.find_all_by_firstname('Aaron')
+# Contact.find_all_by_lastname('Prier')
+# Contact.see_all
