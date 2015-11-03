@@ -1,5 +1,5 @@
 require_relative 'contact'
-require_relative 'contact_database'
+#require_relative 'contact_database'
 
 class ContactList
 
@@ -27,7 +27,7 @@ end
     Contact.new(ARGV[1], ARGV[2], ARGV[3])
     puts "Your contact has been added!"
   end
-  when 'list' then Contact.list
+  when 'list' then Contact.see_all
   when 'show' then 
     Contact.show(ARGV[1])
   when 'find' then 
